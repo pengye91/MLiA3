@@ -66,3 +66,27 @@ def auto_norm(data_set: ndarray) -> (ndarray, ndarray, ndarray):
     # 在numpy中， /表示值相除，而不是矩阵相除
     norm_data_set = norm_data_set / tile(ranges, (m, 1))
     return norm_data_set, ranges, min_values
+
+
+def dating_class_test():
+    # not sure what a ho_ratio is.
+    ho_ratio = 0.1
+    dating_data_mat, dating_labels = file2matrix('./MLiA/Ch02/datingTestSet2.txt')
+    norm_matrix, ranges, min_values = auto_norm(dating_data_mat)
+    m = norm_matrix.shape[0]
+    num_test_vecs = int(m*ho_ratio)
+    error_count = 0.0
+    for i in range(num_test_vecs):
+        classfier_result = classify0(
+            input_x=norm_matrix[i, :],
+            data_set=norm_matrix[num_test_vecs:m, :],
+            labels=dating_labels[num_test_vecs:m],
+            k=3
+        )
+        print("the classfier result is %s, the real anwser is %d" % (classfier_result, dating_labels[i]))
+        if classfier_result != dating_labels[i]:
+            error_count += 1.0
+    print("the total error rate is: %f" % (error_count/float(num_test_vecs)))
+
+
+
